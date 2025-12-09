@@ -1,5 +1,3 @@
-whats# Apate-Hackathon-MQ
-
 ## UI/UX Principles for APATE Investigation Scam Leads Portal
 
 ## Summary:
