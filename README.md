@@ -1,7 +1,7 @@
 # Apate-Hackathon-MQ-
 UI/UX Principles for APATE Investigation Scam Leads Portal
 
-Summary
+Summary: 
 This prototype is a lightweight web-based portal designed to help fraud analysts review captured scam leads, understand and display asssociated metadata
 and allow them to take appropriate investigative actions. The prototype delivers a clean UI driven by real analyst workflows, mock data for simulating real leads
 and action buttons for quick remediation and triage. These actions include Escalate, Ignore and Investigate. Overall, the main focus of this prototype is to deliver an interface that is 
