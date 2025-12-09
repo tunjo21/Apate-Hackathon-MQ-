@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>APATE Investigation Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Roboto', 'Poppins', system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f0f2f5;
+      color: #222;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background: #1a1a1a;
+      color: #e0e0e0;
+    }
+
+    .topbar {
+      width: 100%;
+      background: linear-gradient(90deg, #0d47a1, #1976d2);
+      padding: 16px 24px;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    body.dark-mode .topbar {
+      background: linear-gradient(90deg, #1a237e, #283593);
+    }
+
+    .topbar-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .night-mode-toggle {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .night-mode-toggle:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .debug-info {
+      background: rgba(255,255,255,0.1);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+
+    .app-container {
+      max-width: 1200px;
+      margin: 32px auto;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+
+    body.dark-mode .app-container {
+      background: #2d2d2d;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+      font-size: 28px;
+    }
+
+    .subheader {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 28px;
+    }
+
+    body.dark-mode .subheader {
+      color: #aaa;
+    }
+
+    .storage-status {
+      background: #e3f2fd;
+      border-left: 4px solid #1976d2;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    body.dark-mode .storage-status {
+      background: #1a2942;
+      border-left-color: #42a5f5;
+      color: #000000 !important;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 72px;
+      background: #fff;
+      z-index: 90;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    body.dark-mode .toolbar {
+      background: #2d2d2d;
+      border-bottom-color: #444;
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    select, input[type="text"], input[type="number"] {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      background: #fff;
+      outline: none;
+      transition: border 0.2s, background 0.3s, color 0.3s;
+    }
+
+    body.dark-mode select, 
+    body.dark-mode input[type="text"],
+    body.dark-mode input[type="number"] {
+      background: #3a3a3a;
+      border-color: #555;
+      color: #e0e0e0;
+    }
+
+    select:focus, input[type="text"]:focus, input[type="number"]:focus {
+      border-color: #1976d2;
+    }
+
+    .add-risk-btn {
+      background: linear-gradient(135deg, #43a047, #66bb6a);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
+    }
+
+    .scan-fraud-btn, .clear-data-btn {
+      background: linear-gradient(135deg, #d32f2f, #f44336);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+    }
+
+    .scan-fraud-btn:hover, .clear-data-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(211, 47, 47, 0.4);
+    }
+
+    .add-risk-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(67, 160, 71, 0.4);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      margin-top: 18px;
+      font-size: 14px;
+    }
+
+    thead th {
+      background: #f0f2f7;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      color: #444;
+      border-radius: 8px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark-mode thead th {
+      background: #3a3a3a;
+      color: #e0e0e0;
+    }
+
+    tbody tr {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: transform 0.15s, box-shadow 0.15s, background 0.3s;
+    }
+
+    body.dark-mode tbody tr {
+      background: #3a3a3a;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    tbody tr:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    body.dark-mode tbody tr:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    }
+
+    td {
+      padding: 12px 16px;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-high { background: #ffebee; color: #b3261e; }
+    .badge-medium { background: #fff3cd; color: #8a6d3b; }
+    .badge-low { background: #e2f4e8; color: #1b5e20; }
+
+    .status-pill {
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-open { background: #e3f2fd; color: #0d47a1; }
+    .status-esc { background: #ffebee; color: #b71c1c; }
+    .status-inv { background: #ede7f6; color: #4a148c; }
+    .status-ign { background: #eeeeee; color: #424242; }
+    .status-clo { background: #c8e6c9; color: #1b5e20; }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .action-btn:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    }
+    
+    .action-escalate { background: #ffebee; color: #b71c1c; }
+    .action-investigate { background: #e8eaf6; color: #4a148c; }
+    .action-ignore { background: #eeeeee; color: #424242; }
+    .action-close { background: #c8e6c9; color: #1b5e20; }
+
+    .empty-state {
+      text-align: center;
+      padding: 28px;
+      color: #666;
+      font-size: 15px;
+    }
+
+    body.dark-mode .empty-state {
+      color: #999;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal-content {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+      position: relative;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark-mode .modal-content {
+      background: #2d2d2d;
+      color: #e0e0e0;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 22px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .btn-primary {
+      background: #1976d2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #1565c0;
+    }
+
+    .btn-secondary {
+      background: #eeeeee;
+      color: #424242;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    body.dark-mode .btn-secondary {
+      background: #444;
+      color: #e0e0e0;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    body.dark-mode .btn-secondary:hover {
+      background: #555;
+    }
+
+    .btn-danger {
+      background: #d32f2f;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-danger:hover {
+      background: #c62828;
+    }
+
+    .warning-text {
+      color: #d32f2f;
+      font-size: 14px;
+      margin: 12px 0;
+      padding: 12px;
+      background: #ffebee;
+      border-radius: 8px;
+      border-left: 4px solid #d32f2f;
+    }
+
+    body.dark-mode .warning-text {
+      background: #3a1f1f;
+      color: #ff5252;
+    }
+
+    .footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 13px;
+      color: #777;
+      padding: 14px 0 4px;
+    }
+
+    body.dark-mode .footer {
+      color: #999;
+    }
+
+    @media (max-width: 800px){
+      table, thead, tbody, tr, td, th { display: block; }
+      thead { display: none; }
+      tbody tr { margin-bottom: 12px; }
+      td { padding: 8px 6px; position: relative; }
+      td::before { content: attr(data-label); font-weight: 600; display: block; margin-bottom: 4px; color: #555; }
+      body.dark-mode td::before { color: #aaa; }
+      .actions { justify-content: flex-start; }
+      .topbar { flex-direction: column; gap: 12px; text-align: center; }
+    }
+
+    th[onclick] {
+      transition: opacity 0.3s;
+    }
+    th[onclick]:hover {
+      opacity: 0.9 !important;
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">
+  <span>APATE Investigation Portal</span>
+  <div class="topbar-right">
+    <div class="debug-info" id="debugInfo">Storage: Successful</div>
+    <button class="night-mode-toggle" onclick="toggleNightMode()">🌙 Night Mode</button>
+  </div>
+</div>
+
+<div class="app-container">
+  <h1>APATE Investigation Portal</h1>
+  <div class="subheader">Manage and track scam leads and take investigative action</div>
+  
+  <div class="storage-status" id="storageStatus">
+    🔄 Initializing database...
+  </div>
+  
+  <div class="toolbar">
+    <div class="toolbar-group">
+      <input type="text" id="searchInput" placeholder="Search by type or location..." oninput="renderLeads()">
+      <select id="statusFilter" onchange="renderLeads()">
+        <option value="All">All Status</option>
+        <option value="Open">Open</option>
+        <option value="Escalated">Escalated</option>
+        <option value="Investigating">Investigating</option>
+        <option value="Ignored">Ignored</option>
+        <option value="Closed">Closed</option>
+      </select>
+    </div>
+    
+    <div class="toolbar-group">
+      <button class="add-risk-btn" onclick="openAddRiskModal()">➕ Add Risk</button>
+      <button class="scan-fraud-btn" onclick="detectSuspiciousActivity()">🔍 Scan Fraud</button>
+      <button class="clear-data-btn" onclick="clearAllData()">🗑️ Clear Data</button>
+      <strong id="leadCount">0</strong> leads
+    </div>
+  </div>
+  
+  <table>
+    <thead>
+      <tr>
+        <th onclick="setSort('id')" style="cursor:pointer;" id="th-id">ID <span id="sortId">↕</span></th>
+        <th onclick="setSort('risk')" style="cursor:pointer;" id="th-risk">Risk <span id="sortRisk">↕</span></th>
+        <th onclick="setSort('score')" style="cursor:pointer;" id="th-score">Score <span id="sortScore">↕</span></th>
+        <th>Type</th>
+        <th>Location</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="leadsBody"></tbody>
+  </table>
+
+  <div id="emptyState" class="empty-state" style="display:none;">
+    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076500.png" alt="No data" width="120"/>
+    <div>No leads match your search/filter</div>
+  </div>
+</div>
+
+<!-- Lead Details Modal -->
+<div class="modal" id="leadModal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal('leadModal')">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <p><strong>Risk:</strong> <span id="modalRisk"></span></p>
+    <p><strong>Score:</strong> <span id="modalScore"></span></p>
+    <p><strong>Type:</strong> <span id="modalType"></span></p>
+    <p><strong>Location:</strong> <span id="modalLocation"></span></p>
+    <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+  </div>
+</div>
+
+<!-- Add Risk Modal -->
+<div class="modal" id="addRiskModal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal('addRiskModal')">&times;</span>
+    <h2>Add New Risk Lead</h2>
+    <div class="form-group">
+      <label>Risk Level</label>
+      <select id="newRiskLevel">
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Risk Score (0-100)</label>
+      <input type="number" id="newScore" min="0" max="100" value="50">
+    </div>
+    <div class="form-group">
+      <label>Type</label>
+      <input type="text" id="newType" placeholder="e.g., Phishing, Account Takeover">
+    </div>
+    <div class="form-group">
+      <label>Location</label>
+      <input type="text" id="newLocation" placeholder="e.g., Sydney, Melbourne">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('addRiskModal')">Cancel</button>
+      <button class="btn-primary" onclick="addNewRisk()">Add Risk</button>
+    </div>
+  </div>
+</div>
+
+<!-- Close Case Confirmation Modal -->
+<div class="modal" id="closeCaseModal">
+  <div class="modal-content">
+    <span class="modal-close" onclick="closeModal('closeCaseModal')">&times;</span>
+    <h2>⚠️ Close Case</h2>
+    <p>You are about to close case <strong>#<span id="closeCaseId"></span></strong>.</p>
+    <div class="warning-text">
+      <strong>Warning:</strong> This action cannot be reverted. The case will be marked as solved and archived permanently.
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('closeCaseModal')">Cancel</button>
+      <button class="btn-danger" onclick="confirmCloseCase()">Yes, Close Case</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">Hackathon Prototype | Persistent Storage Enabled</div>
+
+<script>
+  // Database configuration
+  const DB_KEY = 'apate-leads-db';
+  const NEXT_ID_KEY = 'apate-next-id';
+  
+  let leads = [];
+  let nextId = 101;
+  let caseToClose = null;
+  let storageAvailable = false;
+  let currentSort = 'id';  // Default: sort by ID
+  let sortAscending = true;
+
+  function checkStorage() {
+    try {
+      localStorage.setItem('__test__', '1');
+      localStorage.removeItem('__test__');
+      storageAvailable = true;
+      return true;
+    } catch (e) {
+      storageAvailable = false;
+      return false;
+    }
+  }
+
+  async function initDatabase() {
+    const statusEl = document.getElementById('storageStatus');
+    
+    if (!checkStorage()) {
+      statusEl.innerHTML = '⚠️ localStorage unavailable. Data resets on reload.';
+      statusEl.style.background = '#fff3cd';
+      statusEl.style.borderLeftColor = '#ff9800';
+      return [];  // ✅ Empty array instead of defaults
+    }
+
+    try {
+      const data = localStorage.getItem(DB_KEY);
+
+      if (!data) {
+        statusEl.innerHTML = '✅ Database initialized (empty - waiting for fraud detection)';
+        statusEl.style.background = '#e3f2fd';
+        statusEl.style.borderLeftColor = '#1976d2';
+        return [];  // ✅ Empty array on first load
+      } else {
+        leads = JSON.parse(data);
+        statusEl.innerHTML = `✅ Loaded ${leads.length} cases`;
+        statusEl.style.background = '#e3f2fd';
+        statusEl.style.borderLeftColor = '#1976d2';
+        return leads;
+      }
+    } catch (error) {
+      statusEl.innerHTML = '❌ Storage error - starting empty';
+      statusEl.style.background = '#ffebee';
+      statusEl.style.borderLeftColor = '#f44336';
+      return [];  
+    }
+  }
+
+
+  function getNextId() {
+    if (!storageAvailable) return 101;
+    try {
+      const id = localStorage.getItem(NEXT_ID_KEY);
+      return id ? parseInt(id) : 101;
+    } catch { return 101; }
+  }
+
+  function setNextId(id) {
+    if (!storageAvailable) return;
+    try {
+      localStorage.setItem(NEXT_ID_KEY, id.toString());
+    } catch {}
+  }
+
+  function saveLeads(leadsToSave) {
+    if (!storageAvailable) return;
+    try {
+      localStorage.setItem(DB_KEY, JSON.stringify(leadsToSave));
+      document.getElementById('storageStatus').innerHTML = `💾 Saved ${leadsToSave.length} cases`;
+      document.getElementById('storageStatus').style.background = '#e8f5e9';
+      document.getElementById('storageStatus').style.borderLeftColor = '#4caf50';
+    } catch {}
+  }
+
+  function clearAllData() {
+    if (confirm('Delete ALL leads forever?')) {
+      localStorage.removeItem(DB_KEY);
+      localStorage.removeItem(NEXT_ID_KEY);
+      alert('✅ Data cleared!');
+      location.reload();
+    }
+  }
+
+  // Canvas fingerprinting
+  function getCanvasFingerprint() {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.textBaseline = 'top';
+    ctx.font = '14px Arial';
+    ctx.fillText('Fraud detection test', 2, 2);
+    return canvas.toDataURL();
+  }
+
+  function autoLabelRisk(score) {
+    if (score >= 90) return 'High';
+    if (score >= 70) return 'Medium';
+    if (score >= 50) return 'Low';
+    return 'Low';
+  }
+
+  function detectSuspiciousActivity() {
+    const fingerprint = {
+      userAgent: navigator.userAgent,
+      language: navigator.language,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      screen: `${screen.width}x${screen.height}`,
+      platform: navigator.platform,
+      hasTouch: 'ontouchstart' in window,
+      pluginsCount: navigator.plugins.length,
+      canvas: getCanvasFingerprint()
+    };
+
+    let riskScore = 50;
+    let riskType = 'Unknown';
+
+    // Simple Fraud Rules based on https://stytch.com/blog/browser-fingerprinting/, https://www.fraud.com/post/browser-fingerprinting
+    // Rule 1: Headless browsers (bots)
+    if (navigator.webdriver || !window.chrome) {
+      riskScore += 40; 
+      riskType = 'Bot Detection';
+    }
+    
+    // Rule 2: Suspicious user agents
+    if (navigator.userAgent.includes('Headless') || navigator.userAgent.includes('PhantomJS')) {
+      riskScore = 95; 
+      riskType = 'Headless Browser';
+    }
+
+    // Rule 3: No plugins + small screen = emulator
+    if (fingerprint.pluginsCount === 0 && screen.width < 400) {
+      riskScore += 30; 
+      riskType = 'Mobile Emulator';
+    }
+
+    // Rule 4: Weird timezone/language mismatch
+    if (fingerprint.language !== 'en-AU' && fingerprint.timezone !== 'Australia/Sydney') {
+      riskScore += 20; 
+      riskType = 'Proxy/VPN';
+    }
+    riskScore = Math.min(riskScore, 100);
+    const riskLevel = autoLabelRisk(riskScore);
+
+    // Create hash FIRST, then check duplicates
+    const fingerprintHash = btoa(JSON.stringify(fingerprint)).slice(0, 20);
+    const fullType = `${riskType} (${fingerprintHash})`;
+    
+    // Check if this EXACT fingerprint already exists
+    const existingLead = leads.find(l => l.type === fullType);
+
+    if (riskScore > 70 && !existingLead) {  // Only create if not duplicate
+      const newLead = {
+        id: nextId,
+        risk: riskLevel,
+        score: Math.floor(riskScore),
+        type: `${riskType} (${fingerprintHash})`,  // Unique with hash
+        location: fingerprint.timezone.split('/')[1] || 'Unknown',
+        status: 'Open'
+      };
+      leads.unshift(newLead);
+      nextId++;
+      saveLeads(leads);
+      setNextId(nextId);
+      renderLeads();
+
+      console.log(`🚨 NEW FRAUD: ${riskLevel} (${riskScore}) ${riskType}`);
+    } else if (existingLead) {
+      console.log('ℹ️ Duplicate fraud signal ignored:', riskType);
+    }
+  }
+
+  function updateSortButtons() {
+    // Clear all headers
+    document.getElementById('th-id').style.opacity = '0.6';
+    document.getElementById('th-risk').style.opacity = '0.6';
+    document.getElementById('th-score').style.opacity = '0.6';
+
+    // Active sort header
+    if (currentSort === 'id') {
+      document.getElementById('th-id').style.opacity = '1';
+      document.getElementById('sortId').textContent = sortAscending ? '↑' : '↓';
+    } else if (currentSort === 'risk') {
+      document.getElementById('th-risk').style.opacity = '1';
+      document.getElementById('sortRisk').textContent = sortAscending ? '↑' : '↓';
+    } else if (currentSort === 'score') {
+      document.getElementById('th-score').style.opacity = '1';
+      document.getElementById('sortScore').textContent = sortAscending ? '↑' : '↓';
+    }
+  }
+
+  function setSort(column) {
+    if (currentSort === column) {
+      sortAscending = !sortAscending;  // Toggle direction
+    } else {
+      currentSort = column;
+      sortAscending = true;  // Default to ascending
+    }
+    updateSortButtons();
+    renderLeads();
+  }
+
+  function renderLeads() {
+    const tbody = document.getElementById("leadsBody");
+    const emptyState = document.getElementById("emptyState");
+    const leadCount = document.getElementById("leadCount");
+    tbody.innerHTML = "";
+
+    const statusFilter = document.getElementById("statusFilter").value;
+    const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+
+    // Sort first
+    const sortedLeads = [...leads].sort((a, b) => {
+      if (currentSort === 'id') {
+        return sortAscending ? a.id - b.id : b.id - a.id;
+      } else if (currentSort === 'risk') {
+        const riskOrder = { 'High': 3, 'Medium': 2, 'Low': 1 };
+        const aVal = riskOrder[a.risk] || 0;
+        const bVal = riskOrder[b.risk] || 0;
+        return sortAscending ? aVal - bVal : bVal - aVal;
+      } else if (currentSort === 'score') {
+        return sortAscending ? a.score - b.score : b.score - a.score;
+      }
+      return 0;
+    });
+
+    // Filter after sorting
+    const filteredLeads = sortedLeads.filter(l => 
+      (statusFilter === "All" || l.status === statusFilter) &&
+      (l.type.toLowerCase().includes(searchTerm) || l.location.toLowerCase().includes(searchTerm))
+    );
+
+    leadCount.textContent = filteredLeads.length;
+
+    if (filteredLeads.length === 0) {
+      emptyState.style.display = "block";
+      return;
+    } else {
+      emptyState.style.display = "none";
+    }
+
+    // Generate table rows
+    filteredLeads.forEach(lead => {
+      const tr = document.createElement("tr");
+      const isClosedOrIgnored = lead.status === "Closed" || lead.status === "Ignored";
+      
+      tr.innerHTML = `
+        <td data-label="ID">${lead.id}</td>
+        <td data-label="Risk"><span class="badge badge-${lead.risk.toLowerCase()}">${lead.risk}</span></td>
+        <td data-label="Score">${lead.score}</td>
+        <td data-label="Type">${lead.type}</td>
+        <td data-label="Location">${lead.location}</td>
+        <td data-label="Status"><span class="status-pill status-${lead.status.toLowerCase().slice(0,3)}">${lead.status}</span></td>
+        <td data-label="Actions">
+          <div class="actions">
+            ${!isClosedOrIgnored ? `
+              <button class="action-btn action-escalate" onclick="setStatus(${lead.id}, 'Escalated')">Escalate</button>
+              <button class="action-btn action-investigate" onclick="setStatus(${lead.id}, 'Investigating')">Investigate</button>
+              <button class="action-btn action-ignore" onclick="setStatus(${lead.id}, 'Ignored')">Ignore</button>
+              <button class="action-btn action-close" onclick="openCloseCaseModal(${lead.id})">Close</button>
+            ` : ''}
+            <button class="action-btn action-investigate" onclick="openModal(${lead.id})">Details</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function setStatus(id, newStatus) {
+    const lead = leads.find(l => l.id === id);
+    if (!lead) return;
+    lead.status = newStatus;
+    saveLeads(leads);
+    renderLeads();
+  }
+
+  function openModal(id) {
+    const lead = leads.find(l => l.id === id);
+    if (!lead) return;
+    document.getElementById("modalTitle").textContent = `Lead #${lead.id}`;
+    document.getElementById("modalRisk").textContent = lead.risk;
+    document.getElementById("modalScore").textContent = lead.score;
+    document.getElementById("modalType").textContent = lead.type;
+    document.getElementById("modalLocation").textContent = lead.location;
+    document.getElementById("modalStatus").textContent = lead.status;
+    document.getElementById("leadModal").style.display = "flex";
+  }
+
+  function openAddRiskModal() {
+    document.getElementById("addRiskModal").style.display = "flex";
+  }
+
+  async function addNewRisk() {
+    const riskLevel = document.getElementById("newRiskLevel").value;
+    const score = parseInt(document.getElementById("newScore").value);
+    const type = document.getElementById("newType").value.trim();
+    const location = document.getElementById("newLocation").value.trim();
+
+    if (!type || !location) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+  const newLead = {
+    id: nextId,
+    risk: riskLevel,
+    score: score,
+    type: type.length > 35 ? type.slice(0, 35) + '...' : type,
+    location: location,
+    status: "Open"
+  };
+
+    leads.unshift(newLead);
+    saveLeads(leads);
+    
+    nextId++;
+    setNextId(nextId);
+    
+    closeModal('addRiskModal');
+    renderLeads();
+
+    document.getElementById("newType").value = "";
+    document.getElementById("newLocation").value = "";
+    document.getElementById("newScore").value = "50";
+  }
+
+  function openCloseCaseModal(id) {
+    caseToClose = id;
+    document.getElementById("closeCaseId").textContent = id;
+    document.getElementById("closeCaseModal").style.display = "flex";
+  }
+
+  async function confirmCloseCase() {
+    if (caseToClose) {
+      const lead = leads.find(l => l.id === caseToClose);
+      if (lead) {
+        lead.status = "Closed";
+        saveLeads(leads);
+        renderLeads();
+      }
+      closeModal('closeCaseModal');
+      caseToClose = null;
+    }
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).style.display = "none";
+  }
+
+  function toggleNightMode() {
+    document.body.classList.toggle('dark-mode');
+    const btn = document.querySelector('.night-mode-toggle');
+    if (document.body.classList.contains('dark-mode')) {
+      btn.textContent = '☀️ Light Mode';
+    } else {
+      btn.textContent = '🌙 Night Mode';
+    }
+  }
+
+  // Initialize
+  document.addEventListener("DOMContentLoaded", async function() {
+    console.log('🚀 Initializing APATE Investigation Portal...');
+    leads = await initDatabase();
+    nextId = getNextId();
+    
+    // Auto-detect fraud on page load
+    detectSuspiciousActivity();
+    
+    renderLeads();
+    updateSortButtons();
+    setInterval(autoLabelExistingLeads, 60000);  // Re-evaluate every 60 seconds
+});
+
+</script>
+</body>
+</html>
