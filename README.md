@@ -46,12 +46,11 @@ efficient, safe, intuitive and purpose-built for investigating scam leads.
  The prototype supports a natural workflow, as analysts can locate leads via search or filters, quickly take appropriate actions (escalate, investigate, ignore, close),
   and view detailed information when needed. This workflow minimizes friction and ensures efficient lead management.
 
-   8. Risk Sorting:
+### 8. Risk Sorting:
       The prototype also has a feature(up and down toggle arrows) to sort the risks, their ID numbers and their ratings by ascending or descending order, so the most dangerous scam leads can be prioritised according to which
       needs to be investigated by the fraud analysts. The down arrow sorts by highest to lowest risk and risk score, while the up arrow sorts by lowest to highest risk and risk score, allowing analysts
       to prioritise the scam leads by which are the most and least urgent.
-
-9. Clear Separation of Concerns:
+### 9. Clear Separation of Concerns:
     The different icons/buttons, such as clear fraud, clear data and add risk, are marked by red and green colors respectively, so the user has a clear view of which buttons are for adding and which are for clearing. The use of icons
     also clearly highlights the function of each button, preventing accidental usage. The status is also written in clear, all uppercase text for further clarity. The different colours for each of the buttons in
    each scam lead also highlights each's separate functionality and provides a clear demarcation of each action, providing ease of use for the user.
