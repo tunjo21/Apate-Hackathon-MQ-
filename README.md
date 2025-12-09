@@ -24,7 +24,7 @@ efficient, safe, intuitive and purpose-built for investigating scam leads.
 
 ### 3. Status Feedback:
    The table rows and action buttons use a hover state(are raised slightly) to provide a quick and interactive response to the
-   user. The modals open and close clearly with smooth transitions, while the empty state prevents any confusion when there is no
+   user. The models open and close clearly with smooth transitions, while the empty state prevents any confusion when there is no
    data available.
 
 ### 4. Responsiveness:
