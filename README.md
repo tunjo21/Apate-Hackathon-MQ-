@@ -13,8 +13,8 @@ efficient, safe, intuitive and purpose-built for investigating scam leads.
 
 ### 1. Clarity and Hierarchy:
    Our design aims keep the prototype clean and simple, intentionally avoiding clutter for easy display and navigation. Its minimalistic design ensures
-   only essential data is displayed as required, including risk ID, scam type, the location in which it occurred and its action status. Color coding is also used
-   consistently, since each risk level is highlighted with a different color. Status icons have other distinct colors(open - blue, ignored - grey and investigating - purple) to
+   only essential data is displayed as required, including risk ID, scam type, the location in which it occurred and its action status. Colour coding is also used
+   consistently, since each risk level is highlighted with a different colour. Status icons have other distinct colours(open - blue, ignored - grey and investigating - purple) to
    further distinguish them. Table headers are also displayed to be more larger, while rows are separated with spacing. Action buttons are grouped for quick scanning. 
 
 ### 2. Consistency:
