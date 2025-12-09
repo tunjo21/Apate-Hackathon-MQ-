@@ -1,4 +1,4 @@
-# Apate-Hackathon-MQ
+whats# Apate-Hackathon-MQ
 
 ## UI/UX Principles for APATE Investigation Scam Leads Portal
 
@@ -56,5 +56,134 @@ efficient, safe, intuitive and purpose-built for investigating scam leads.
     also clearly highlights the function of each button, preventing accidental usage. The status is also written in clear, all uppercase text for further clarity. The different colours for each of the buttons in
    each scam lead also highlights each's separate functionality and provides a clear demarcation of each action, providing ease of use for the user.
 
-   
-   
+
+User Stories
+
+User Story 1 – Lead Intake, Fraud Scan & Risk Management
+As a Fraud Analyst, I want all fraud leads to appear in the portal with clear metadata, so I can immediately evaluate their severity and begin triage.
+Acceptance Criteria
+When the portal loads:
+There are no default risks.
+Analysts must add risks manually if needed.
+
+
+Analyst can:
+Add new risks
+Delete any risk
+Have zero risks if all are deleted
+
+
+Analyst can create new leads through:
+Scan Fraud button (manual scan)
+Optional: auto-intake (if implemented)
+
+
+Each new lead must include:
+ID
+Risk
+Score
+Type
+Location
+Status = Open
+
+
+New leads appear instantly without refresh.
+
+
+Long text (Type/Location/Description):
+Must not overflow outside the canvas
+Must use wrapping or truncation ("…")
+Full content visible inside Details
+
+
+Night Mode / Light Mode is available and toggles the theme.
+
+
+User Story 2 – Analyst Actions & Sorting
+As a Fraud Analyst, I want to take actions on each lead and sort the list so I can triage quickly and clearly.
+Acceptance Criteria
+Actions
+Each lead has action buttons:
+Escalate
+Investigate
+Ignore / Close ( SAME action → final )
+Details
+
+
+Ignore / Close Behaviour
+Ignore and Close do the exact same thing:
+Status changes to Closed (or Ignored— whichever wording you use)
+The lead becomes final
+Escalate and Investigate become disabled
+Status cannot change anymore
+Details
+Shows all lead fields:
+ID
+Risk
+Score
+Type
+Location
+Description
+Status
+Sorting
+User can sort leads by clicking column headers:
+ID ascending/descending
+Score ascending/descending
+Risk ascending/descending
+
+
+Sorting requirements:
+Must toggle between ↑ and ↓
+Sorting must work with filters:
+e.g., “Investigating only, sorted by Score ↓”
+
+
+Filtering
+User can filter by:
+Open
+Investigating
+Escalated
+Closed (Ignore/Close)
+Filtering:
+Updates displayed leads instantly
+Works with sorting
+
+
+
+User Story 3 – Lead Outcome Tracking & Dashboard Summary
+As a Team Lead, I want to understand the final states of leads so I can monitor workflow performance.
+Acceptance Criteria
+Dashboard displays one of these status:
+
+
+Open
+Investigating
+Escalated
+Closed (Ignore/Close)
+
+
+Status persists only while the lead exists.
+
+
+Counts are shown for:
+
+
+Open
+Investigating
+Escalated
+Closed
+
+
+Counts update automatically when:
+
+
+Status changes
+Lead is closed
+Lead is deleted
+
+
+Sorting and filtering do not break the counts.
+
+
+Escalated leads must be clearly highlighted.
+
